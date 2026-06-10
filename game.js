@@ -1,156 +1,288 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = 400;
-canvas.height = 400;
+canvas.width = 600;
+canvas.height = 600;
 
 const gridSize = 20;
 const tileCount = canvas.width / gridSize;
 
-let snake = [{ x: 10, y: 10 }];
-let direction = { x: 0, y: 0 };
-let food = spawnFood();
+let snake = [{ x: 15, y: 15 }];
+let food = generateFood();
+
+let dx = 0;
+let dy = 0;
+
 let score = 0;
-let highScore = localStorage.getItem("snakeHighScore") || 0;
-let gameInterval = null;
+let level = 1;
+
+let gameRunning = false;
+let paused = false;
+
 let speed = 120;
-let isPaused = false;
+let gameLoop;
 
-document.getElementById("highScore").innerText = highScore;
+let highScore =
+  localStorage.getItem("snakeHighScore") || 0;
 
-// ---------- GAME LOOP ----------
-function gameLoop() {
-  if (isPaused) return;
+document.getElementById("highScore").innerText =
+  highScore;
 
-  update();
-  draw();
-}
-
-// ---------- UPDATE ----------
-function update() {
-  const head = {
-    x: snake[0].x + direction.x,
-    y: snake[0].y + direction.y
-  };
-
-  // WALL COLLISION
-  if (
-    head.x < 0 || head.x >= tileCount ||
-    head.y < 0 || head.y >= tileCount
-  ) {
-    return gameOver();
-  }
-
-  // SELF COLLISION
-  for (let segment of snake) {
-    if (segment.x === head.x && segment.y === head.y) {
-      return gameOver();
-    }
-  }
-
-  snake.unshift(head);
-
-  // FOOD EAT
-  if (head.x === food.x && head.y === food.y) {
-    score++;
-    document.getElementById("score").innerText = score;
-    food = spawnFood();
-
-    if (score % 5 === 0 && speed > 60) {
-      speed -= 5;
-      restartInterval();
-    }
-  } else {
-    snake.pop();
-  }
-}
-
-// ---------- DRAW ----------
-function draw() {
-  ctx.fillStyle = "#0b1220";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // FOOD
-  ctx.fillStyle = "#ef4444";
-  ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
-
-  // SNAKE
-  for (let i = 0; i < snake.length; i++) {
-    ctx.fillStyle = i === 0 ? "#22c55e" : "#16a34a";
-    ctx.fillRect(
-      snake[i].x * gridSize,
-      snake[i].y * gridSize,
-      gridSize,
-      gridSize
-    );
-  }
-}
-
-// ---------- FOOD ----------
-function spawnFood() {
+function generateFood() {
   return {
     x: Math.floor(Math.random() * tileCount),
     y: Math.floor(Math.random() * tileCount)
   };
 }
 
-// ---------- CONTROLS ----------
-document.addEventListener("keydown", (e) => {
-  switch (e.key) {
-    case "ArrowUp":
-      if (direction.y === 1) break;
-      direction = { x: 0, y: -1 };
-      break;
-    case "ArrowDown":
-      if (direction.y === -1) break;
-      direction = { x: 0, y: 1 };
-      break;
-    case "ArrowLeft":
-      if (direction.x === 1) break;
-      direction = { x: -1, y: 0 };
-      break;
-    case "ArrowRight":
-      if (direction.x === -1) break;
-      direction = { x: 1, y: 0 };
-      break;
-  }
-});
+function drawGame() {
 
-// ---------- GAME CONTROL ----------
-function startGame() {
-  if (!gameInterval) {
-    gameInterval = setInterval(gameLoop, speed);
+  ctx.fillStyle = "#020617";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Food
+  ctx.fillStyle = "#f43f5e";
+  ctx.beginPath();
+  ctx.arc(
+    food.x * gridSize + 10,
+    food.y * gridSize + 10,
+    8,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
+
+  // Snake
+  snake.forEach((segment, index) => {
+
+    ctx.fillStyle =
+      index === 0 ? "#22c55e" : "#16a34a";
+
+    ctx.fillRect(
+      segment.x * gridSize,
+      segment.y * gridSize,
+      gridSize - 2,
+      gridSize - 2
+    );
+  });
+}
+
+function updateGame() {
+
+  if (!gameRunning || paused) return;
+
+  const head = {
+    x: snake[0].x + dx,
+    y: snake[0].y + dy
+  };
+
+  if (
+    head.x < 0 ||
+    head.y < 0 ||
+    head.x >= tileCount ||
+    head.y >= tileCount
+  ) {
+    gameOver();
+    return;
   }
-  isPaused = false;
+
+  for (let segment of snake) {
+    if (
+      segment.x === head.x &&
+      segment.y === head.y
+    ) {
+      gameOver();
+      return;
+    }
+  }
+
+  snake.unshift(head);
+
+  if (
+    head.x === food.x &&
+    head.y === food.y
+  ) {
+
+    score++;
+
+    document.getElementById("score").innerText =
+      score;
+
+    food = generateFood();
+
+    if (score % 5 === 0) {
+
+      level++;
+
+      document.getElementById("level").innerText =
+        level;
+
+      if (speed > 50) {
+        speed -= 10;
+
+        clearInterval(gameLoop);
+
+        gameLoop =
+          setInterval(gameTick, speed);
+      }
+    }
+
+  } else {
+
+    snake.pop();
+  }
+
+  drawGame();
+}
+
+function gameTick() {
+  updateGame();
+}
+
+function startGame() {
+
+  if (gameRunning) return;
+
+  dx = 1;
+  dy = 0;
+
+  gameRunning = true;
+
+  clearInterval(gameLoop);
+
+  gameLoop =
+    setInterval(gameTick, speed);
 }
 
 function pauseGame() {
-  isPaused = true;
+  paused = true;
+}
+
+function resumeGame() {
+  paused = false;
 }
 
 function resetGame() {
-  snake = [{ x: 10, y: 10 }];
-  direction = { x: 0, y: 0 };
+
+  clearInterval(gameLoop);
+
+  snake = [{ x: 15, y: 15 }];
+
+  food = generateFood();
+
   score = 0;
+  level = 1;
+
   speed = 120;
-  food = spawnFood();
-  document.getElementById("score").innerText = 0;
-  restartInterval();
+
+  dx = 0;
+  dy = 0;
+
+  paused = false;
+  gameRunning = false;
+
+  document.getElementById("score").innerText =
+    0;
+
+  document.getElementById("level").innerText =
+    1;
+
+  drawGame();
 }
 
 function gameOver() {
-  clearInterval(gameInterval);
-  gameInterval = null;
+
+  clearInterval(gameLoop);
+
+  gameRunning = false;
 
   if (score > highScore) {
-    localStorage.setItem("snakeHighScore", score);
+
+    highScore = score;
+
+    localStorage.setItem(
+      "snakeHighScore",
+      highScore
+    );
+
+    document.getElementById(
+      "highScore"
+    ).innerText = highScore;
   }
 
-  alert("Game Over! Score: " + score);
+  alert(
+    "Game Over!\nScore: " +
+      score +
+      "\nLevel: " +
+      level
+  );
 }
 
-// ---------- SPEED CONTROL ----------
-function restartInterval() {
-  clearInterval(gameInterval);
-  gameInterval = setInterval(gameLoop, speed);
+document.addEventListener(
+  "keydown",
+  (e) => {
+
+    switch (e.key) {
+
+      case "ArrowUp":
+        if (dy !== 1) {
+          dx = 0;
+          dy = -1;
+        }
+        break;
+
+      case "ArrowDown":
+        if (dy !== -1) {
+          dx = 0;
+          dy = 1;
+        }
+        break;
+
+      case "ArrowLeft":
+        if (dx !== 1) {
+          dx = -1;
+          dy = 0;
+        }
+        break;
+
+      case "ArrowRight":
+        if (dx !== -1) {
+          dx = 1;
+          dy = 0;
+        }
+        break;
+    }
+  }
+);
+
+// Mobile Controls
+
+function moveUp() {
+  if (dy !== 1) {
+    dx = 0;
+    dy = -1;
+  }
 }
+
+function moveDown() {
+  if (dy !== -1) {
+    dx = 0;
+    dy = 1;
+  }
+}
+
+function moveLeft() {
+  if (dx !== 1) {
+    dx = -1;
+    dy = 0;
+  }
+}
+
+function moveRight() {
+  if (dx !== -1) {
+    dx = 1;
+    dy = 0;
+  }
+}
+
+drawGame();
