@@ -100,3 +100,30 @@ if ('serviceWorker' in navigator) {
     <h2>🏆 Top 10 Scores</h2>
     <ol id="leaderboardList"></ol>
 </div>
+let darkTheme = true;
+
+function toggleTheme(){
+
+if(darkTheme){
+
+document.body.style.background =
+"#f1f5f9";
+
+document.body.style.color =
+"#000";
+
+}
+else{
+
+document.body.style.background =
+"#0f172a";
+
+document.body.style.color =
+"#fff";
+
+}
+
+darkTheme =
+!darkTheme;
+
+}
