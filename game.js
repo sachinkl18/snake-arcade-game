@@ -95,7 +95,22 @@ function generateFood() {
   };
 }
 
-function drawGame() {
+function let particles = []; function createParticles(x,y){
+
+for(let i=0;i<15;i++){
+
+particles.push({
+x:x,
+y:y,
+vx:(Math.random()-0.5)*4,
+vy:(Math.random()-0.5)*4,
+life:30
+});
+
+}
+
+}
+drawGame() {
 
   ctx.fillStyle = "#020617";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
