@@ -1,47 +1,140 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(120deg, #0f172a, #1e293b);
-  color: white;
-  text-align: center;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
 }
 
-.container {
-  padding: 20px;
+body{
+    background:#0f172a;
+    color:white;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
 }
 
-canvas {
-  background: #0b1220;
-  border: 2px solid #38bdf8;
-  margin-top: 10px;
-  border-radius: 10px;
+.container{
+    width:100%;
+    max-width:900px;
+    text-align:center;
 }
 
-.scoreboard {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  font-size: 18px;
-  margin-bottom: 10px;
+h1{
+    margin-bottom:20px;
+    color:#38bdf8;
+    text-shadow:0 0 10px #38bdf8;
 }
 
-button {
-  padding: 10px 15px;
-  margin: 5px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  background: #38bdf8;
-  color: black;
-  font-weight: bold;
+.top-panel{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:15px;
 }
 
-button:hover {
-  background: #0ea5e9;
+.card{
+    background:#1e293b;
+    padding:15px;
+    border-radius:12px;
+    min-width:120px;
+    border:1px solid #38bdf8;
+    box-shadow:0 0 15px rgba(56,189,248,.3);
 }
 
-.hint {
-  margin-top: 10px;
-  font-size: 14px;
-  opacity: 0.7;
+.card span{
+    display:block;
+    margin-top:5px;
+    font-size:24px;
+    font-weight:bold;
+}
+
+canvas{
+    background:#020617;
+    border:3px solid #38bdf8;
+    border-radius:15px;
+    box-shadow:0 0 25px rgba(56,189,248,.5);
+    width:100%;
+    max-width:600px;
+    height:auto;
+}
+
+.buttons{
+    margin-top:15px;
+}
+
+.buttons button{
+    padding:12px 18px;
+    margin:5px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+    background:#38bdf8;
+    color:black;
+    transition:.3s;
+}
+
+.buttons button:hover{
+    transform:scale(1.05);
+}
+
+.leaderboard{
+    margin-top:20px;
+    background:#1e293b;
+    padding:15px;
+    border-radius:15px;
+    border:1px solid #38bdf8;
+}
+
+.leaderboard h2{
+    margin-bottom:10px;
+}
+
+.leaderboard ol{
+    text-align:left;
+    max-width:300px;
+    margin:auto;
+}
+
+.leaderboard li{
+    margin:5px 0;
+}
+
+.mobile-controls{
+    display:none;
+    margin-top:20px;
+    text-align:center;
+}
+
+.mobile-controls button{
+    width:70px;
+    height:70px;
+    margin:5px;
+    border:none;
+    border-radius:50%;
+    font-size:28px;
+    background:#38bdf8;
+    color:black;
+    font-weight:bold;
+}
+
+@media(max-width:768px){
+
+    .mobile-controls{
+        display:block;
+    }
+
+    .buttons button{
+        width:45%;
+        margin-bottom:10px;
+    }
+
+    canvas{
+        max-width:100%;
+    }
+
 }
