@@ -212,6 +212,10 @@ levelSound.play();
     snake.pop();
   }
 
+ createParticles(
+food.x * gridSize,
+food.y * gridSize
+);
   drawGame();
 }
 
