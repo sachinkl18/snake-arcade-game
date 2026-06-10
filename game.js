@@ -110,6 +110,27 @@ life:30
 }
 
 }
+particles.forEach((p,index)=>{
+
+ctx.fillStyle =
+"yellow";
+
+ctx.fillRect(
+p.x,
+p.y,
+3,
+3
+);
+
+p.x += p.vx;
+p.y += p.vy;
+
+p.life--;
+
+if(p.life <= 0)
+particles.splice(index,1);
+
+});
 drawGame() {
 
   ctx.fillStyle = "#020617";
