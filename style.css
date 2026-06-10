@@ -138,3 +138,20 @@ canvas{
     }
 
 }
+.leaderboard{
+    margin-top:20px;
+}
+
+.leaderboard ol{
+    max-width:300px;
+    margin:auto;
+    text-align:left;
+}
+
+.leaderboard li{
+    background:#111827;
+    margin:5px 0;
+    padding:8px;
+    border-radius:8px;
+    border-left:4px solid gold;
+}
