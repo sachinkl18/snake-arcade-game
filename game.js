@@ -1,3 +1,11 @@
+const eatSound =
+document.getElementById("eatSound");
+
+const gameOverSound =
+document.getElementById("gameOverSound");
+
+const levelSound =
+document.getElementById("levelSound");
 let leaderboard =
 JSON.parse(localStorage.getItem("snakeLeaderboard")) || [];
 const canvas = document.getElementById("gameCanvas");
