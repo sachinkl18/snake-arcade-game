@@ -1,32 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Snake Arcade Game</title>
-  <link rel="stylesheet" href="style.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Snake Arcade Pro</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#111827">
+
 </head>
+
 <body>
 
-  <div class="container">
-    <h1>🐍 Snake Arcade Game</h1>
+<div class="container">
 
-    <div class="scoreboard">
-      <div>Score: <span id="score">0</span></div>
-      <div>High Score: <span id="highScore">0</span></div>
+    <h1>🐍 Snake Arcade Pro</h1>
+
+    <div class="top-panel">
+
+        <div class="card">
+            Score
+            <span id="score">0</span>
+        </div>
+
+        <div class="card">
+            High Score
+            <span id="highScore">0</span>
+        </div>
+
+        <div class="card">
+            Level
+            <span id="level">1</span>
+        </div>
+
     </div>
 
     <canvas id="gameCanvas"></canvas>
 
-    <div class="controls">
-      <button onclick="startGame()">Start</button>
-      <button onclick="pauseGame()">Pause</button>
-      <button onclick="resetGame()">Reset</button>
+    <div class="buttons">
+
+        <button onclick="startGame()">▶ Start</button>
+
+        <button onclick="pauseGame()">⏸ Pause</button>
+
+        <button onclick="resumeGame()">▶ Resume</button>
+
+        <button onclick="resetGame()">🔄 Restart</button>
+
     </div>
 
-    <p class="hint">Use Arrow Keys / Swipe (Mobile)</p>
-  </div>
+    <div class="leaderboard">
 
-  <script src="game.js"></script>
+        <h2>🏆 Top Scores</h2>
+
+        <ol id="leaderboardList"></ol>
+
+    </div>
+
+</div>
+
+<div class="mobile-controls">
+
+    <button onclick="moveUp()">⬆</button>
+
+    <div>
+
+        <button onclick="moveLeft()">⬅</button>
+
+        <button onclick="moveRight()">➡</button>
+
+    </div>
+
+    <button onclick="moveDown()">⬇</button>
+
+</div>
+
+<audio id="eatSound"></audio>
+<audio id="gameOverSound"></audio>
+<audio id="levelSound"></audio>
+
+<script src="game.js"></script>
+
 </body>
 </html>
