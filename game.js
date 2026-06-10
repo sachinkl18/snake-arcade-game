@@ -1,3 +1,53 @@
+let touchStartX = 0;
+let touchStartY = 0;
+
+canvas.addEventListener(
+"touchstart",
+e => {
+
+touchStartX =
+e.touches[0].clientX;
+
+touchStartY =
+e.touches[0].clientY;
+
+});
+
+canvas.addEventListener(
+"touchend",
+e => {
+
+let touchEndX =
+e.changedTouches[0].clientX;
+
+let touchEndY =
+e.changedTouches[0].clientY;
+
+let dxSwipe =
+touchEndX - touchStartX;
+
+let dySwipe =
+touchEndY - touchStartY;
+
+if(Math.abs(dxSwipe) >
+Math.abs(dySwipe)) {
+
+if(dxSwipe > 0)
+moveRight();
+else
+moveLeft();
+
+}
+else {
+
+if(dySwipe > 0)
+moveDown();
+else
+moveUp();
+
+}
+
+});
 const eatSound =
 document.getElementById("eatSound");
 
@@ -101,7 +151,8 @@ function updateGame() {
       segment.x === head.x &&
       segment.y === head.y
     ) {
-      gameOver();
+      gameOver(gameOverSound.currentTime = 0;
+gameOverSound.play(););
       return;
     }
   }
@@ -114,6 +165,8 @@ function updateGame() {
   ) {
 
     score++;
+    eatSound.currentTime = 0;
+eatSound.play();
 
     document.getElementById("score").innerText =
       score;
@@ -123,6 +176,8 @@ function updateGame() {
     if (score % 5 === 0) {
 
       level++;
+      levelSound.currentTime = 0;
+levelSound.play();
 
       document.getElementById("level").innerText =
         level;
