@@ -212,6 +212,7 @@ function gameOver() {
     ).innerText = highScore;
   }
 
+  updateLeaderboard(score);
   alert(
     "Game Over!\nScore: " +
       score +
@@ -324,3 +325,4 @@ function renderLeaderboard() {
         list.appendChild(li);
     });
 }
+renderLeaderboard();
