@@ -1,0 +1,47 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(120deg, #0f172a, #1e293b);
+  color: white;
+  text-align: center;
+}
+
+.container {
+  padding: 20px;
+}
+
+canvas {
+  background: #0b1220;
+  border: 2px solid #38bdf8;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+.scoreboard {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px 15px;
+  margin: 5px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #38bdf8;
+  color: black;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #0ea5e9;
+}
+
+.hint {
+  margin-top: 10px;
+  font-size: 14px;
+  opacity: 0.7;
+}
