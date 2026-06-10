@@ -1,3 +1,5 @@
+let leaderboard =
+JSON.parse(localStorage.getItem("snakeLeaderboard")) || [];
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -286,3 +288,39 @@ function moveRight() {
 }
 
 drawGame();
+function updateLeaderboard(score) {
+
+    leaderboard.push(score);
+
+    leaderboard.sort((a,b)=>b-a);
+
+    leaderboard = leaderboard.slice(0,10);
+
+    localStorage.setItem(
+        "snakeLeaderboard",
+        JSON.stringify(leaderboard)
+    );
+
+    renderLeaderboard();
+}
+
+function renderLeaderboard() {
+
+    const list =
+      document.getElementById("leaderboardList");
+
+    if(!list) return;
+
+    list.innerHTML = "";
+
+    leaderboard.forEach((score,index)=>{
+
+        const li =
+          document.createElement("li");
+
+        li.textContent =
+          `#${index+1} - ${score}`;
+
+        list.appendChild(li);
+    });
+}
