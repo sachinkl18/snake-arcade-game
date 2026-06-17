@@ -1,449 +1,287 @@
-let touchStartX = 0;
-let touchStartY = 0;
+// =====================================
+// Snake Arcade Pro Ultimate
+// Game Engine v1.0
+// =====================================
 
-canvas.addEventListener(
-"touchstart",
-e => {
-
-touchStartX =
-e.touches[0].clientX;
-
-touchStartY =
-e.touches[0].clientY;
-
-});
-
-canvas.addEventListener(
-"touchend",
-e => {
-
-let touchEndX =
-e.changedTouches[0].clientX;
-
-let touchEndY =
-e.changedTouches[0].clientY;
-
-let dxSwipe =
-touchEndX - touchStartX;
-
-let dySwipe =
-touchEndY - touchStartY;
-
-if(Math.abs(dxSwipe) >
-Math.abs(dySwipe)) {
-
-if(dxSwipe > 0)
-moveRight();
-else
-moveLeft();
-
-}
-else {
-
-if(dySwipe > 0)
-moveDown();
-else
-moveUp();
-
-}
-
-});
-const eatSound =
-document.getElementById("eatSound");
-
-const gameOverSound =
-document.getElementById("gameOverSound");
-
-const levelSound =
-document.getElementById("levelSound");
-let leaderboard =
-JSON.parse(localStorage.getItem("snakeLeaderboard")) || [];
+// Canvas
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = 600;
-canvas.height = 600;
+// Grid
+const GRID_SIZE = 20;
+const COLS = 30;
+const ROWS = 30;
 
-const gridSize = 20;
-const tileCount = canvas.width / gridSize;
+// Canvas Size
+canvas.width = GRID_SIZE * COLS;
+canvas.height = GRID_SIZE * ROWS;
 
-let snake = [{ x: 15, y: 15 }];
-let food = generateFood();
+// Game State
+let gameRunning = false;
+let gamePaused = false;
 
-let dx = 0;
-let dy = 0;
+// Snake
+let snake = [];
+let direction = "RIGHT";
+let nextDirection = "RIGHT";
 
+// Food
+let food = {x:10,y:10};
+
+// Coins
+let coins = [];
+
+// Obstacles
+let obstacles = [];
+
+// Particles
+let particles = [];
+
+// Score
 let score = 0;
 let level = 1;
+let speed = 8;
 
-let gameRunning = false;
-let paused = false;
-
-let speed = 120;
-let gameLoop;
-
+// High Score
 let highScore =
-  localStorage.getItem("snakeHighScore") || 0;
+parseInt(localStorage.getItem("highscore")) || 0;
 
-document.getElementById("highScore").innerText =
-  highScore;
+document.getElementById("highScore").textContent =
+highScore;
 
-function generateFood() {
-  return {
-    x: Math.floor(Math.random() * tileCount),
-    y: Math.floor(Math.random() * tileCount)
-  };
+// =====================================
+// Initialize
+// =====================================
+
+function initGame(){
+
+snake=[
+{x:5,y:10},
+{x:4,y:10},
+{x:3,y:10}
+];
+
+direction="RIGHT";
+nextDirection="RIGHT";
+
+score=0;
+level=1;
+speed=8;
+
+spawnFood();
+
+updateHUD();
+
 }
 
-function let particles = []; function createParticles(x,y){
+initGame();
 
-for(let i=0;i<15;i++){
+// =====================================
+// HUD
+// =====================================
 
-particles.push({
-x:x,
-y:y,
-vx:(Math.random()-0.5)*4,
-vy:(Math.random()-0.5)*4,
-life:30
-});
+function updateHUD(){
+
+document.getElementById("score").textContent=score;
+
+document.getElementById("level").textContent=level;
+
+document.getElementById("highScore").textContent=highScore;
+
+}
+
+// =====================================
+// Food
+// =====================================
+
+function spawnFood(){
+
+food={
+
+x:Math.floor(Math.random()*COLS),
+
+y:Math.floor(Math.random()*ROWS)
+
+};
+
+}
+
+// =====================================
+// Draw Grid
+// =====================================
+
+function drawGrid(){
+
+ctx.strokeStyle="#111";
+
+for(let x=0;x<=COLS;x++){
+
+ctx.beginPath();
+
+ctx.moveTo(x*GRID_SIZE,0);
+
+ctx.lineTo(x*GRID_SIZE,canvas.height);
+
+ctx.stroke();
+
+}
+
+for(let y=0;y<=ROWS;y++){
+
+ctx.beginPath();
+
+ctx.moveTo(0,y*GRID_SIZE);
+
+ctx.lineTo(canvas.width,y*GRID_SIZE);
+
+ctx.stroke();
 
 }
 
 }
-particles.forEach((p,index)=>{
 
-ctx.fillStyle =
-"yellow";
+// =====================================
+// Draw Snake
+// =====================================
+
+function drawSnake(){
+
+snake.forEach((part,index)=>{
+
+ctx.fillStyle=index===0?"#00ffff":"#22c55e";
 
 ctx.fillRect(
-p.x,
-p.y,
-3,
-3
+
+part.x*GRID_SIZE,
+
+part.y*GRID_SIZE,
+
+GRID_SIZE-2,
+
+GRID_SIZE-2
+
 );
-
-p.x += p.vx;
-p.y += p.vy;
-
-p.life--;
-
-if(p.life <= 0)
-particles.splice(index,1);
 
 });
-drawGame() {
 
-  ctx.fillStyle = "#020617";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Food
-  ctx.fillStyle = "#f43f5e";
-  ctx.beginPath();
-  ctx.arc(
-    food.x * gridSize + 10,
-    food.y * gridSize + 10,
-    8,
-    0,
-    Math.PI * 2
-  );
-  ctx.fill();
-
-  // Snake
-  snake.forEach((segment, index) => {
-
-    ctx.fillStyle =
-      index === 0 ? "#22c55e" : "#16a34a";
-
-    ctx.fillRect(
-      segment.x * gridSize,
-      segment.y * gridSize,
-      gridSize - 2,
-      gridSize - 2
-    );
-  });
 }
 
-function updateGame() {
+// =====================================
+// Draw Food
+// =====================================
 
-  if (!gameRunning || paused) return;
+function drawFood(){
 
-  const head = {
-    x: snake[0].x + dx,
-    y: snake[0].y + dy
-  };
+ctx.fillStyle="#ff1744";
 
-  if (
-    head.x < 0 ||
-    head.y < 0 ||
-    head.x >= tileCount ||
-    head.y >= tileCount
-  ) {
-    gameOver();
-    return;
-  }
+ctx.beginPath();
 
-  for (let segment of snake) {
-    if (
-      segment.x === head.x &&
-      segment.y === head.y
-    ) {
-      gameOver(gameOverSound.currentTime = 0;
-gameOverSound.play(););
-      return;
-    }
-  }
+ctx.arc(
 
-  snake.unshift(head);
+food.x*GRID_SIZE+10,
 
-  if (
-    head.x === food.x &&
-    head.y === food.y
-  ) {
+food.y*GRID_SIZE+10,
 
-    score++;
-    eatSound.currentTime = 0;
-eatSound.play();
+8,
 
-    document.getElementById("score").innerText =
-      score;
+0,
 
-    food = generateFood();
+Math.PI*2
 
-    if (score % 5 === 0) {
-
-      level++;
-      levelSound.currentTime = 0;
-levelSound.play();
-
-      document.getElementById("level").innerText =
-        level;
-
-      if (speed > 50) {
-        speed -= 10;
-
-        clearInterval(gameLoop);
-
-        gameLoop =
-          setInterval(gameTick, speed);
-      }
-    }
-
-  } else {
-
-    snake.pop();
-  }
-
- createParticles(
-food.x * gridSize,
-food.y * gridSize
 );
-  drawGame();
+
+ctx.fill();
+
 }
 
-function gameTick() {
-  updateGame();
+// =====================================
+// Render
+// =====================================
+
+function render(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+drawGrid();
+
+drawFood();
+
+drawSnake();
+
 }
 
-function startGame() {
+// =====================================
+// Game Loop
+// =====================================
 
-  if (gameRunning) return;
+let lastTime=0;
 
-  dx = 1;
-  dy = 0;
+function gameLoop(timestamp){
 
-  gameRunning = true;
+if(!gameRunning)return;
 
-  clearInterval(gameLoop);
+if(gamePaused){
 
-  gameLoop =
-    setInterval(gameTick, speed);
+requestAnimationFrame(gameLoop);
+
+return;
+
 }
 
-function pauseGame() {
-  paused = true;
+if(timestamp-lastTime>1000/speed){
+
+update();
+
+lastTime=timestamp;
+
 }
 
-function resumeGame() {
-  paused = false;
+render();
+
+requestAnimationFrame(gameLoop);
+
 }
 
-function resetGame() {
+// =====================================
+// Buttons
+// =====================================
 
-  clearInterval(gameLoop);
+document.getElementById("playBtn").onclick=()=>{
 
-  snake = [{ x: 15, y: 15 }];
+document.getElementById("menuScreen").classList.add("hidden");
 
-  food = generateFood();
+document.getElementById("gameScreen").classList.remove("hidden");
 
-  score = 0;
-  level = 1;
+gameRunning=true;
 
-  speed = 120;
+requestAnimationFrame(gameLoop);
 
-  dx = 0;
-  dy = 0;
+};
 
-  paused = false;
-  gameRunning = false;
+document.getElementById("pauseBtn").onclick=()=>{
 
-  document.getElementById("score").innerText =
-    0;
+gamePaused=true;
 
-  document.getElementById("level").innerText =
-    1;
+};
 
-  drawGame();
+document.getElementById("resumeBtn").onclick=()=>{
+
+gamePaused=false;
+
+};
+
+document.getElementById("restartBtn").onclick=()=>{
+
+initGame();
+
+};
+
+// =====================================
+// Temporary Update
+// =====================================
+
+function update(){
+
+// Step 3.2
+
 }
-
-function gameOver() {
-
-  clearInterval(gameLoop);
-
-  gameRunning = false;
-
-  if (score > highScore) {
-
-    highScore = score;
-
-    localStorage.setItem(
-      "snakeHighScore",
-      highScore
-    );
-
-    document.getElementById(
-      "highScore"
-    ).innerText = highScore;
-  }
-
-  updateLeaderboard(score);
-  alert(
-    "Game Over!\nScore: " +
-      score +
-      "\nLevel: " +
-      level
-  );
-}
-
-document.addEventListener(
-  "keydown",
-  (e) => {
-
-    switch (e.key) {
-
-  case "ArrowUp":
-    if (dy !== 1) {
-      dx = 0;
-      dy = -1;
-    }
-    break;
-
-  case "ArrowDown":
-    if (dy !== -1) {
-      dx = 0;
-      dy = 1;
-    }
-    break;
-
-  case "ArrowLeft":
-    if (dx !== 1) {
-      dx = -1;
-      dy = 0;
-    }
-    break;
-
-  case "ArrowRight":
-    if (dx !== -1) {
-      dx = 1;
-      dy = 0;
-    }
-    break;
-
-  case "w":
-  case "W":
-    moveUp();
-    break;
-
-  case "s":
-  case "S":
-    moveDown();
-    break;
-
-  case "a":
-  case "A":
-    moveLeft();
-    break;
-
-  case "d":
-  case "D":
-    moveRight();
-    break;
-}
-
-// Mobile Controls
-
-function moveUp() {
-  if (dy !== 1) {
-    dx = 0;
-    dy = -1;
-  }
-}
-
-function moveDown() {
-  if (dy !== -1) {
-    dx = 0;
-    dy = 1;
-  }
-}
-
-function moveLeft() {
-  if (dx !== 1) {
-    dx = -1;
-    dy = 0;
-  }
-}
-
-function moveRight() {
-  if (dx !== -1) {
-    dx = 1;
-    dy = 0;
-  }
-}
-
-drawGame();
-function updateLeaderboard(score) {
-
-    leaderboard.push(score);
-
-    leaderboard.sort((a,b)=>b-a);
-
-    leaderboard = leaderboard.slice(0,10);
-
-    localStorage.setItem(
-        "snakeLeaderboard",
-        JSON.stringify(leaderboard)
-    );
-
-    renderLeaderboard();
-}
-
-function renderLeaderboard() {
-
-    const list =
-      document.getElementById("leaderboardList");
-
-    if(!list) return;
-
-    list.innerHTML = "";
-
-    leaderboard.forEach((score,index)=>{
-
-        const li =
-          document.createElement("li");
-
-        li.textContent =
-          `#${index+1} - ${score}`;
-
-        list.appendChild(li);
-    });
-}
-renderLeaderboard();
