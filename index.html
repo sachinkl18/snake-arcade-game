@@ -1,129 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Arcade Pro</title>
 
-<title>Snake Arcade Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
 
-<link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#0f172a">
+</head>
 
-<link rel="manifest" href="manifest.json">
+<body>
 
-<meta name="theme-color" content="#111827">
+<!-- Loading Screen -->
+<div id="loadingScreen" class="screen">
+    <h1>🐍 Snake Arcade Pro</h1>
+    <div class="loader"></div>
+    <p>Loading...</p>
+</div>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#38bdf8">
-
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js');
-}
-</script>
-
-<div class="container">
+<!-- Main Menu -->
+<div id="menuScreen" class="screen hidden">
 
     <h1>🐍 Snake Arcade Pro</h1>
 
-    <div class="top-panel">
+    <button id="playBtn">▶ Play</button>
 
-        <div class="card">
-            Score
-            <span id="score">0</span>
+    <button id="leaderboardBtn">🏆 Leaderboard</button>
+
+    <button id="settingsBtn">⚙ Settings</button>
+
+    <button id="aboutBtn">ℹ About</button>
+
+</div>
+
+<!-- Game Screen -->
+<div id="gameScreen" class="hidden">
+
+    <header>
+
+        <div class="scoreBox">
+
+            <span>Score</span>
+
+            <h2 id="score">0</h2>
+
         </div>
 
-        <div class="card">
-            High Score
-            <span id="highScore">0</span>
+        <div class="scoreBox">
+
+            <span>High Score</span>
+
+            <h2 id="highScore">0</h2>
+
         </div>
 
-        <div class="card">
-            Level
-            <span id="level">1</span>
+        <div class="scoreBox">
+
+            <span>Level</span>
+
+            <h2 id="level">1</h2>
+
         </div>
 
-    </div>
+    </header>
 
-    <canvas id="gameCanvas"></canvas>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
 
-    <div class="buttons">
+    <div class="controls">
 
-        <button onclick="startGame()">▶ Start</button>
+        <button id="pauseBtn">Pause</button>
 
-        <button onclick="pauseGame()">⏸ Pause</button>
+        <button id="resumeBtn">Resume</button>
 
-        <button onclick="resumeGame()">▶ Resume</button>
-
-        <button onclick="resetGame()">🔄 Restart</button>
-
-    </div>
-
-    <div class="leaderboard">
-
-        <h2>🏆 Top Scores</h2>
-
-        <ol id="leaderboardList"></ol>
+        <button id="restartBtn">Restart</button>
 
     </div>
 
 </div>
 
-<div class="mobile-controls">
+<!-- Leaderboard -->
+<div id="leaderboardScreen" class="screen hidden">
 
-    <button onclick="moveUp()">⬆</button>
-<button onclick="toggleTheme()">
-🎨 Theme
-</button>
-    <div>
+    <h1>🏆 Top Scores</h1>
 
-        <button onclick="moveLeft()">⬅</button>
+    <ol id="leaderboardList"></ol>
 
-        <button onclick="moveRight()">➡</button>
-
-    </div>
-
-    <button onclick="moveDown()">⬇</button>
+    <button class="backBtn">⬅ Back</button>
 
 </div>
 
-<audio id="eatSound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+<!-- Settings -->
+<div id="settingsScreen" class="screen hidden">
 
-<audio id="gameOverSound" src="https://assets.mixkit.co/active_storage/sfx/2220/2220-preview.mp3"></audio>
+    <h1>⚙ Settings</h1>
 
-<audio id="levelSound" src="https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3"></audio>
+    <label>
+
+        <input type="checkbox" id="soundToggle" checked>
+
+        Sound ON
+
+    </label>
+
+    <br><br>
+
+    <label>
+
+        <input type="checkbox" id="musicToggle" checked>
+
+        Music ON
+
+    </label>
+
+    <br><br>
+
+    <button class="backBtn">⬅ Back</button>
+
+</div>
+
+<!-- About -->
+<div id="aboutScreen" class="screen hidden">
+
+    <h1>About</h1>
+
+    <p>
+
+        Snake Arcade Pro Ultimate Edition
+
+    </p>
+
+    <p>
+
+        Built with HTML5 Canvas
+
+    </p>
+
+    <button class="backBtn">⬅ Back</button>
+
+</div>
 
 <script src="game.js"></script>
 
 </body>
 </html>
-<div class="leaderboard">
-    <h2>🏆 Top 10 Scores</h2>
-    <ol id="leaderboardList"></ol>
-</div>
-let darkTheme = true;
-
-function toggleTheme(){
-
-if(darkTheme){
-
-document.body.style.background =
-"#f1f5f9";
-
-document.body.style.color =
-"#000";
-
-}
-else{
-
-document.body.style.background =
-"#0f172a";
-
-document.body.style.color =
-"#fff";
-
-}
-
-darkTheme =
-!darkTheme;
-
-}
