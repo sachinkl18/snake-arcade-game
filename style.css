@@ -209,3 +209,279 @@ canvas{
     box-shadow:0 0 25px #38bdf8;
 
 }
+/* ==========================================
+   PREMIUM GAMING BACKGROUND
+========================================== */
+
+body{
+
+background:
+linear-gradient(135deg,#020617,#0f172a,#111827);
+
+background-size:400% 400%;
+
+animation:bgMove 18s ease infinite;
+
+}
+
+@keyframes bgMove{
+
+0%{
+background-position:0% 50%;
+}
+
+50%{
+background-position:100% 50%;
+}
+
+100%{
+background-position:0% 50%;
+}
+
+}
+
+/* ==========================================
+   GLASS EFFECT
+========================================== */
+
+.scoreBox,
+.controls,
+#leaderboardScreen,
+#settingsScreen,
+#aboutScreen{
+
+background:rgba(255,255,255,.08);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.15);
+
+box-shadow:
+
+0 0 20px rgba(0,255,255,.25),
+
+0 0 60px rgba(0,255,255,.10);
+
+}
+
+/* ==========================================
+   BUTTON EFFECTS
+========================================== */
+
+button{
+
+position:relative;
+
+overflow:hidden;
+
+transition:.35s;
+
+}
+
+button:hover{
+
+transform:translateY(-3px);
+
+box-shadow:
+
+0 0 20px #38bdf8,
+
+0 0 40px #38bdf8;
+
+}
+
+button::before{
+
+content:"";
+
+position:absolute;
+
+left:-120%;
+
+top:0;
+
+width:100%;
+
+height:100%;
+
+background:
+
+linear-gradient(
+
+90deg,
+
+transparent,
+
+rgba(255,255,255,.45),
+
+transparent
+
+);
+
+transition:.7s;
+
+}
+
+button:hover::before{
+
+left:120%;
+
+}
+
+/* ==========================================
+   CANVAS EFFECT
+========================================== */
+
+canvas{
+
+transition:.35s;
+
+}
+
+canvas:hover{
+
+transform:scale(1.01);
+
+box-shadow:
+
+0 0 20px cyan,
+
+0 0 40px cyan,
+
+0 0 80px cyan;
+
+}
+
+/* ==========================================
+   MENU ANIMATION
+========================================== */
+
+.screen{
+
+animation:fadeScreen .6s;
+
+}
+
+@keyframes fadeScreen{
+
+from{
+
+opacity:0;
+
+transform:scale(.95);
+
+}
+
+to{
+
+opacity:1;
+
+transform:scale(1);
+
+}
+
+}
+
+/* ==========================================
+   TITLE EFFECT
+========================================== */
+
+h1{
+
+animation:glowTitle 2s infinite alternate;
+
+}
+
+@keyframes glowTitle{
+
+from{
+
+text-shadow:
+
+0 0 8px cyan,
+
+0 0 20px cyan;
+
+}
+
+to{
+
+text-shadow:
+
+0 0 20px cyan,
+
+0 0 60px cyan,
+
+0 0 100px cyan;
+
+}
+
+}
+
+/* ==========================================
+   MOBILE RESPONSIVE
+========================================== */
+
+@media(max-width:900px){
+
+header{
+
+flex-wrap:wrap;
+
+gap:10px;
+
+}
+
+.scoreBox{
+
+width:120px;
+
+}
+
+canvas{
+
+width:95vw;
+
+height:95vw;
+
+max-width:600px;
+
+max-height:600px;
+
+}
+
+button{
+
+width:220px;
+
+font-size:16px;
+
+}
+
+}
+
+@media(max-width:600px){
+
+h1{
+
+font-size:34px;
+
+}
+
+.scoreBox{
+
+width:90px;
+
+padding:10px;
+
+}
+
+button{
+
+width:200px;
+
+padding:12px;
+
+}
+
+}
