@@ -1,157 +1,211 @@
+/* ---------- RESET ---------- */
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
 }
 
 body{
-    background:#0f172a;
+
+    font-family:Arial,Helvetica,sans-serif;
+
+    background:#08111f;
+
     color:white;
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
+
+    overflow:hidden;
+
+    height:100vh;
+
 }
 
-.container{
-    width:100%;
-    max-width:900px;
-    text-align:center;
+/* ---------- SCREENS ---------- */
+
+.screen{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:linear-gradient(
+        180deg,
+        #091324,
+        #020617
+    );
+
 }
+
+.hidden{
+
+    display:none;
+
+}
+
+/* ---------- TITLE ---------- */
 
 h1{
-    margin-bottom:20px;
+
+    font-size:50px;
+
+    margin-bottom:30px;
+
     color:#38bdf8;
-    text-shadow:0 0 10px #38bdf8;
+
+    text-shadow:
+    0 0 10px #38bdf8,
+    0 0 30px #38bdf8;
+
 }
 
-.top-panel{
-    display:flex;
-    justify-content:center;
-    gap:15px;
-    flex-wrap:wrap;
-    margin-bottom:15px;
-}
+/* ---------- BUTTONS ---------- */
 
-.card{
-    background:#1e293b;
+button{
+
+    width:250px;
+
     padding:15px;
+
+    margin:10px;
+
+    border:none;
+
     border-radius:12px;
-    min-width:120px;
-    border:1px solid #38bdf8;
-    box-shadow:0 0 15px rgba(56,189,248,.3);
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    color:white;
+
+    background:#2563eb;
+
+    transition:.25s;
+
 }
 
-.card span{
-    display:block;
-    margin-top:5px;
-    font-size:24px;
-    font-weight:bold;
+button:hover{
+
+    transform:scale(1.05);
+
+    background:#3b82f6;
+
+}
+
+/* ---------- LOADER ---------- */
+
+.loader{
+
+    width:80px;
+
+    height:80px;
+
+    border:8px solid #1e293b;
+
+    border-top:8px solid #38bdf8;
+
+    border-radius:50%;
+
+    animation:spin 1s linear infinite;
+
+    margin-bottom:25px;
+
+}
+
+@keyframes spin{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+/* ---------- GAME ---------- */
+
+#gameScreen{
+
+    width:100%;
+
+    height:100vh;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:flex-start;
+
+    align-items:center;
+
+}
+
+header{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:20px;
+
+    margin-top:20px;
+
+}
+
+.scoreBox{
+
+    width:150px;
+
+    padding:15px;
+
+    background:#111827;
+
+    border:2px solid #38bdf8;
+
+    border-radius:15px;
+
+    text-align:center;
+
+}
+
+.scoreBox span{
+
+    color:#94a3b8;
+
+}
+
+.scoreBox h2{
+
+    margin-top:8px;
+
+    color:#38bdf8;
+
 }
 
 canvas{
-    background:#020617;
-    border:3px solid #38bdf8;
-    border-radius:15px;
-    box-shadow:0 0 25px rgba(56,189,248,.5);
-    width:100%;
-    max-width:600px;
-    height:auto;
-}
 
-.buttons{
-    margin-top:15px;
-}
-
-.buttons button{
-    padding:12px 18px;
-    margin:5px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    font-size:16px;
-    font-weight:bold;
-    background:#38bdf8;
-    color:black;
-    transition:.3s;
-}
-
-.buttons button:hover{
-    transform:scale(1.05);
-}
-
-.leaderboard{
     margin-top:20px;
-    background:#1e293b;
-    padding:15px;
-    border-radius:15px;
-    border:1px solid #38bdf8;
-}
 
-.leaderboard h2{
-    margin-bottom:10px;
-}
+    border:4px solid #38bdf8;
 
-.leaderboard ol{
-    text-align:left;
-    max-width:300px;
-    margin:auto;
-}
+    border-radius:18px;
 
-.leaderboard li{
-    margin:5px 0;
-}
+    background:#000;
 
-.mobile-controls{
-    display:none;
-    margin-top:20px;
-    text-align:center;
-}
+    box-shadow:0 0 25px #38bdf8;
 
-.mobile-controls button{
-    width:70px;
-    height:70px;
-    margin:5px;
-    border:none;
-    border-radius:50%;
-    font-size:28px;
-    background:#38bdf8;
-    color:black;
-    font-weight:bold;
-}
-
-@media(max-width:768px){
-
-    .mobile-controls{
-        display:block;
-    }
-
-    .buttons button{
-        width:45%;
-        margin-bottom:10px;
-    }
-
-    canvas{
-        max-width:100%;
-    }
-
-}
-.leaderboard{
-    margin-top:20px;
-}
-
-.leaderboard ol{
-    max-width:300px;
-    margin:auto;
-    text-align:left;
-}
-
-.leaderboard li{
-    background:#111827;
-    margin:5px 0;
-    padding:8px;
-    border-radius:8px;
-    border-left:4px solid gold;
 }
